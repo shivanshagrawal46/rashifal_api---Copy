@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Kosh Entries</title>
+</head>
+<body>
+  <h1>Kosh Entries</h1>
+  <ul>
+    <% kosh.forEach(function(entry) { %>
+      <li>
+        <strong><%= entry.title_hi %></strong> - <%= entry.meaning %>
+      </li>
+    <% }); %>
+  </ul>
+</body>
+</html>

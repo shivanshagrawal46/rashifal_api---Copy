@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Log In to JyotishVishwkosh</title>
+
+  <!-- Font Awesome 5 Free -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+  <!-- <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    integrity="sha512-dNmCQXc9tfpm+GAGorsF8kfADaBsGoLY2SNnraE5ajRRh+Wk1HgW+gKm0P8Qh+4qx9f4/iP3TRW+jBjF2r6R3g=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  /> -->
+
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <img src="/images/shri.webp" alt="Logo" class="logo" />
+
+    <h1 class="title">
+      Log In to <span class="brand">JyotishVishwkosh</span>
+    </h1>
+
+    <form method="POST" action="/login">
+      <div class="input-group">
+        <div class="icon-wrapper">
+          <i class="fas fa-user"></i>
+        </div>
+        <input type="text" name="username" placeholder="Username" required />
+      </div>
+
+      <div class="input-group">
+        <div class="icon-wrapper">
+          <i class="fas fa-lock"></i>
+        </div>
+        <input
+          id="passwordField"
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+      </div>
+
+      <div class="options">
+        <label class="switch">
+          <input type="checkbox" id="showPwd" />
+          <span class="slider round"></span>
+        </label>
+        <label for="showPwd" class="switch-label">Show Password</label>
+      </div>
+      
+
+      <% if (error) { %>
+        <div class="error"><%= error %></div>
+      <% } %>
+
+      <button type="submit" class="btn">Log In</button>
+
+      <div class="remember">
+        <input type="checkbox" name="remember" id="remember" />
+        <label for="remember">Keep me logged in</label>
+      </div>
+    </form>
+
+    <footer>
+      © 2025 All Rights Reserved.
+      <a href="#" class="footer-link">JyotishVishwkosh Privacy</a>,
+      and <a href="#" class="footer-link">Terms</a>.
+    </footer>
+  </div>
+
+  <script>
+    document
+      .getElementById('showPwd')
+      .addEventListener('change', (e) => {
+        const pwd = document.getElementById('passwordField');
+        pwd.type = e.target.checked ? 'text' : 'password';
+      });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+<!-- <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log In to JyotishVishwkosh</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p1CmQ9UbyKn+ef9yZZ8qZ1lWddOm0KZrDf8bU+iw6xV1cG8wFj+6E8KwYbFz7eV9hWeuZ53w1rAwQvE5ZT3Hzw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <img src="/images/shri.webp" alt="Logo" class="logo">
+    <h1 class="title">Log In to <span class="brand">JyotishVishwkosh</span></h1>
+    <form method="POST" action="/login">
+      <div class="input-group">
+        <i class="fa fa-user"></i>
+        <input type="text" name="username" placeholder="Username" required>
+      </div>
+      <div class="input-group">
+        <i class="fa fa-lock"></i>
+        <input id="passwordField" type="password" name="password" placeholder="Password" required>
+      </div>
+
+      <div class="options">
+        <label class="switch">
+          <input type="checkbox" id="showPwd">
+          <span class="slider round"></span>
+        </label>
+        <label for="showPwd" class="switch-label">Show Password</label>
+      </div>
+
+      <% if (error) { %>
+        <div class="error"><%= error %></div>
+      <% } %>
+
+      <button type="submit" class="btn">Log In</button>
+
+      <div class="remember">
+        <input type="checkbox" name="remember" id="remember">
+        <label for="remember">Keep me logged in</label>
+      </div>
+    </form>
+
+    <footer>
+      © 2025 All Rights Reserved. <a href="#" class="footer-link">JyotishVishwkosh Privacy</a>, and <a href="#" class="footer-link">Terms</a>.
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('showPwd').addEventListener('change', e => {
+      const pwd = document.getElementById('passwordField');
+      pwd.type = e.target.checked ? 'text' : 'password';
+    });
+  </script>
+</body>
+</html> -->

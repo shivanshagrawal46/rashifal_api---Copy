@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Upload</title>
+  <style>
+    /* ─────── Global Reset & Variables ─────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #5A67D8;       /* soft indigo */ 
+      --primary-light: #E0E7FF; /* light background */
+      --accent: #48BB78;        /* green accent */
+      --text-dark: #2D3748;     /* charcoal */
+      --bg: #F7FAFC;            /* near-white */
+      --card: #FFFFFF;          /* white cards */
+      --radius: 0.5rem;
+      --shadow: 0 2px 10px rgba(0,0,0,0.05);
+      --transition: 0.3s ease;
+      font-size: 16px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.5;
+      padding: 2rem;
+    }
+    h2 {
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+    /* ─────── Layout ─────── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      transition: transform var(--transition);
+    }
+    .card:hover {
+      transform: translateY(-4px);
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    select, input[type="file"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #CBD5E0;
+      border-radius: var(--radius);
+      background: var(--primary-light);
+      transition: border-color var(--transition);
+    }
+    select:focus, input[type="file"]:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    button {
+      background: var(--primary);
+      color: #FFF;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      margin-top: 0.5rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background var(--transition), transform var(--transition);
+    }
+    button:hover {
+      background: #434190;
+      transform: translateY(-2px);
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #E2E8F0;
+      margin: 2rem 0;
+    }
+    /* ─────── Grid for bulk inputs ─────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+    .grid .form-group {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h2>Rashifal---->Upload Single Month Excel</h2>
+      <form action="/admin/upload?month=2" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="month-select">Select month</label>
+          <select id="month-select" name="month" onchange="this.form.action='/admin/upload?month='+this.value" required>
+            <option value="">-- Choose month --</option>
+            <option value="2">January 2025</option>
+            <option value="3">February 2025</option>
+            <option value="4">March 2025</option>
+            <option value="5">April 2025</option>
+            <option value="6">May 2025</option>
+            <option value="7">June 2025</option>
+            <option value="8">July 2025</option>
+            <option value="9">August 2025</option>
+            <option value="10">September 2025</option>
+            <option value="11">October 2025</option>
+            <option value="12">November 2025</option>
+            <option value="13">December 2025</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="single-file">Choose Excel file</label>
+          <input id="single-file" type="file" name="file" accept=".xlsx,.xls" required>
+        </div>
+        <button type="submit">Upload Month</button>
+      </form>
+    </div>
+
+    <hr>
+
+    <div class="card">
+      <h2>Rashifal---->Bulk Upload All Months</h2>
+      <form action="/admin/bulk-upload" method="post" enctype="multipart/form-data">
+        <div class="grid">
+          <div class="form-group"><label>January</label><input type="file" name="m2" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>February</label><input type="file" name="m3" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>March</label><input type="file" name="m4" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>April</label><input type="file" name="m5" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>May</label><input type="file" name="m6" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>June</label><input type="file" name="m7" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>July</label><input type="file" name="m8" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>August</label><input type="file" name="m9" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>September </label><input type="file" name="m10" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>October </label><input type="file" name="m11" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>November </label><input type="file" name="m12" accept=".xlsx,.xls"></div>
+          <div class="form-group"><label>December </label><input type="file" name="m13" accept=".xlsx,.xls"></div>
+        </div>
+        <button type="submit">Bulk Upload All</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Admin Upload</title>
+</head>
+<body>
+  <h2>Upload Single Month Excel</h2>
+  <form
+    action="/admin/upload?month=2"
+    method="post"
+    enctype="multipart/form-data"  required for file upload :contentReference[oaicite:1]{index=1}
+  >
+    <label for="month-select">Select month:</label>
+    <select
+      id="month-select"
+      name="month"
+      onchange="this.form.action='/admin/upload?month='+this.value"
+      required
+    > -->
+      <!-- <option value="">--Choose month--</option>
+      <option value="2">January 2025</option>
+      <option value="3">February 2025</option>
+      <option value="4">March 2025</option>
+      <option value="5">April 2025</option>
+      <option value="6">May 2025</option>
+      <option value="7">June 2025</option>
+      <option value="8">July 2025</option>
+      <option value="9">August 2025</option>
+      <option value="10">September 2025</option>
+      <option value="11">October 2025</option>
+      <option value="12">November 2025</option>
+      <option value="13">December 2025</option>
+    </select>
+    <input type="file" name="file" accept=".xlsx,.xls" required>
+    <button type="submit">Upload Month</button>
+  </form>
+
+  <hr>
+
+  <h2>Bulk Upload All Months</h2>
+  <form
+    action="/admin/bulk-upload"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    one input per month named m2…m13 to match multer.fields([...]) keys :contentReference[oaicite:2]{index=2} -->
+    <!-- <div><label>Jan (m2):</label>    <input type="file" name="m2"  accept=".xlsx,.xls"></div>
+    <div><label>Feb (m3):</label>    <input type="file" name="m3"  accept=".xlsx,.xls"></div>
+    <div><label>Mar (m4):</label>    <input type="file" name="m4"  accept=".xlsx,.xls"></div>
+    <div><label>Apr (m5):</label>    <input type="file" name="m5"  accept=".xlsx,.xls"></div>
+    <div><label>May (m6):</label>    <input type="file" name="m6"  accept=".xlsx,.xls"></div>
+    <div><label>Jun (m7):</label>    <input type="file" name="m7"  accept=".xlsx,.xls"></div>
+    <div><label>Jul (m8):</label>    <input type="file" name="m8"  accept=".xlsx,.xls"></div>
+    <div><label>Aug (m9):</label>    <input type="file" name="m9"  accept=".xlsx,.xls"></div>
+    <div><label>Sep (m10):</label>   <input type="file" name="m10" accept=".xlsx,.xls"></div>
+    <div><label>Oct (m11):</label>   <input type="file" name="m11" accept=".xlsx,.xls"></div>
+    <div><label>Nov (m12):</label>   <input type="file" name="m12" accept=".xlsx,.xls"></div>
+    <div><label>Dec (m13):</label>   <input type="file" name="m13" accept=".xlsx,.xls"></div>
+    <button type="submit">Bulk Upload All</button>
+  </form>
+</body>
+</html> -->

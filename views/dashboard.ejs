@@ -2857,7 +2857,7 @@
       const subcategoryName = document.getElementById('subcategoryName').value;
       
       try {
-        const response = await fetch(`/admin/mcq-subcategory/${categoryId}`, {
+        const response = await fetch(`/admin/subcategories/${categoryId}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

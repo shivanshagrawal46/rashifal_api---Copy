@@ -17,6 +17,9 @@ const koshCatRouter = require('./routes/koshCat');
 const adminRouter = require('./routes/admin');
 const dailyRashifalRouter = require('./routes/dailyRashifal');
 const koshDhatuRouter = require('./routes/koshDhatu');
+const mcqCategoryRouter = require('./routes/mcqCategory');
+const mcqSubcategoryRouter = require('./routes/mcqSubcategory');
+const mcqQuestionRouter = require('./routes/mcqQuestion');
 
 const app = express();
 
@@ -77,6 +80,15 @@ app.use(
 
 // Public API routes - Mount before other routes
 app.use('/jyotish/api/v1/koshCat', koshCatRouter);
+app.use('/jyotish/api/v1/m', mcqCategoryRouter);
+
+// Add debug logging for MCQ routes
+app.use((req, res, next) => {
+  if (req.path.startsWith('/jyotish/api/v1/m')) {
+    console.log('MCQ API Request:', req.method, req.path);
+  }
+  next();
+});
 
 //app.use('/jyotish/api/v1/koshCat/daily', koshCatRouter);
 
@@ -111,10 +123,11 @@ function checkAuth(req, res, next) {
 app.use('/admin', checkAuth);
 app.get('/admin', (req, res) => res.render('dashboard'));
 app.use('/admin', adminRouter);
-
-// Mount dailyRashifal routes
 app.use('/admin', dailyRashifalRouter);
 app.use('/admin', koshDhatuRouter);
+app.use('/admin', mcqCategoryRouter);
+app.use('/admin/subcategories', mcqSubcategoryRouter);
+app.use('/admin/mcq-questions', mcqQuestionRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

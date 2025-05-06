@@ -2816,14 +2816,20 @@
               const id = this.getAttribute('data-id');
               if (confirm('Are you sure you want to delete this subcategory?')) {
                 try {
-                  const response = await fetch(`/admin/mcq-subcategory/${id}`, {
+                  const response = await fetch(`/admin/subcategories/${id}`, {
                     method: 'DELETE'
                   });
                   const result = await response.json();
                   if (result.status) {
                     loadSubcategories(categoryId); // Refresh the list
+                    // Show success message
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'alert alert-success';
+                    messageDiv.textContent = 'Subcategory deleted successfully';
+                    document.querySelector('.subcategory-section').insertBefore(messageDiv, document.querySelector('.subcategory-header'));
+                    setTimeout(() => messageDiv.remove(), 3000);
                   } else {
-                    alert('Failed to delete subcategory');
+                    alert(result.message || 'Failed to delete subcategory');
                   }
                 } catch (error) {
                   console.error('Error deleting subcategory:', error);
@@ -3033,6 +3039,215 @@
       messageDiv.className = `alert alert-${type}`;
       messageDiv.style.display = 'block';
     }
+
+    // Add these modals before the closing body tag
+    // Edit Category Modal
+    function openEditCategoryModal(categoryId, categoryName) {
+      document.getElementById('editCategoryName').value = categoryName;
+      document.getElementById('editCategoryForm').setAttribute('data-id', categoryId);
+      document.getElementById('editCategoryModal').classList.add('active');
+    }
+
+    function closeEditCategoryModal() {
+      document.getElementById('editCategoryModal').classList.remove('active');
+      document.getElementById('editCategoryForm').reset();
+    }
+
+    // Add these functions for subcategory editing
+    function openEditSubcategoryModal(subcategoryId, subcategoryName) {
+      document.getElementById('editSubcategoryName').value = subcategoryName;
+      document.getElementById('editSubcategoryForm').setAttribute('data-id', subcategoryId);
+      document.getElementById('editSubcategoryModal').classList.add('active');
+    }
+
+    function closeEditSubcategoryModal() {
+      document.getElementById('editSubcategoryModal').classList.remove('active');
+      document.getElementById('editSubcategoryForm').reset();
+    }
+
+    // Add these functions for question editing
+    function openEditQuestionModal(question) {
+      document.getElementById('editQuestionText').value = question.question;
+      document.getElementById('editOption1').value = question.option1;
+      document.getElementById('editOption2').value = question.option2;
+      document.getElementById('editOption3').value = question.option3;
+      document.getElementById('editOption4').value = question.option4;
+      document.getElementById('editCorrectOption').value = question.correct_option;
+      document.getElementById('editQuestionForm').setAttribute('data-id', question.id);
+      document.getElementById('editQuestionModal').classList.add('active');
+    }
+
+    function closeEditQuestionModal() {
+      document.getElementById('editQuestionModal').classList.remove('active');
+      document.getElementById('editQuestionForm').reset();
+    }
+
+    // Add event listeners for edit forms
+    document.getElementById('editCategoryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const categoryId = e.target.getAttribute('data-id');
+      const categoryName = document.getElementById('editCategoryName').value;
+      const messageDiv = document.getElementById('editCategoryMessage');
+
+      try {
+        const response = await fetch(`/admin/${categoryId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category_name: categoryName })
+        });
+
+        const result = await response.json();
+        
+        if (result.status) {
+          messageDiv.textContent = 'Category updated successfully!';
+          messageDiv.className = 'alert alert-success';
+          messageDiv.style.display = 'block';
+          
+          // Refresh the categories list
+          await fetchMCQCategories();
+          
+          // Close modal after 1.5 seconds
+          setTimeout(() => {
+            closeEditCategoryModal();
+            messageDiv.style.display = 'none';
+          }, 1500);
+        } else {
+          messageDiv.textContent = result.message || 'Failed to update category';
+          messageDiv.className = 'alert alert-danger';
+          messageDiv.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error updating category:', error);
+        messageDiv.textContent = 'Error updating category';
+        messageDiv.className = 'alert alert-danger';
+        messageDiv.style.display = 'block';
+      }
+    });
+
+    document.getElementById('editSubcategoryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const subcategoryId = e.target.getAttribute('data-id');
+      const subcategoryName = document.getElementById('editSubcategoryName').value;
+      const messageDiv = document.getElementById('editSubcategoryMessage');
+      const categoryId = document.getElementById('categoryId').textContent;
+
+      try {
+        const response = await fetch(`/admin/mcq-subcategory/${subcategoryId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subcategory_name: subcategoryName })
+        });
+
+        const result = await response.json();
+        
+        if (result.status) {
+          messageDiv.textContent = 'Subcategory updated successfully!';
+          messageDiv.className = 'alert alert-success';
+          messageDiv.style.display = 'block';
+          
+          // Refresh the subcategories list
+          await loadSubcategories(categoryId);
+          
+          // Close modal after 1.5 seconds
+          setTimeout(() => {
+            closeEditSubcategoryModal();
+            messageDiv.style.display = 'none';
+          }, 1500);
+        } else {
+          messageDiv.textContent = result.message || 'Failed to update subcategory';
+          messageDiv.className = 'alert alert-danger';
+          messageDiv.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error updating subcategory:', error);
+        messageDiv.textContent = 'Error updating subcategory';
+        messageDiv.className = 'alert alert-danger';
+        messageDiv.style.display = 'block';
+      }
+    });
+
+    document.getElementById('editQuestionForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const questionId = e.target.getAttribute('data-id');
+      const questionData = {
+        question: document.getElementById('editQuestionText').value,
+        option1: document.getElementById('editOption1').value,
+        option2: document.getElementById('editOption2').value,
+        option3: document.getElementById('editOption3').value,
+        option4: document.getElementById('editOption4').value,
+        correct_option: parseInt(document.getElementById('editCorrectOption').value)
+      };
+      const messageDiv = document.getElementById('editQuestionMessage');
+      const subcategoryId = document.getElementById('mcqQuestionsSection').getAttribute('data-subcategory-id');
+
+      try {
+        const response = await fetch(`/admin/mcq-questions/${questionId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(questionData)
+        });
+
+        const result = await response.json();
+        
+        if (result.status) {
+          messageDiv.textContent = 'Question updated successfully!';
+          messageDiv.className = 'alert alert-success';
+          messageDiv.style.display = 'block';
+          
+          // Refresh the questions list
+          await loadMCQQuestions(subcategoryId);
+          
+          // Close modal after 1.5 seconds
+          setTimeout(() => {
+            closeEditQuestionModal();
+            messageDiv.style.display = 'none';
+          }, 1500);
+        } else {
+          messageDiv.textContent = result.message || 'Failed to update question';
+          messageDiv.className = 'alert alert-danger';
+          messageDiv.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error updating question:', error);
+        messageDiv.textContent = 'Error updating question';
+        messageDiv.className = 'alert alert-danger';
+        messageDiv.style.display = 'block';
+      }
+    });
+
+    // Update the existing event listeners to use the new edit functions
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        const row = this.closest('tr');
+        if (row) {
+          // This is a question edit
+          const question = {
+            id: id,
+            question: row.cells[1].textContent,
+            option1: row.querySelector('.options-list li:nth-child(1)').textContent.replace('1. ', ''),
+            option2: row.querySelector('.options-list li:nth-child(2)').textContent.replace('2. ', ''),
+            option3: row.querySelector('.options-list li:nth-child(3)').textContent.replace('3. ', ''),
+            option4: row.querySelector('.options-list li:nth-child(4)').textContent.replace('4. ', ''),
+            correct_option: parseInt(row.cells[3].textContent)
+          };
+          openEditQuestionModal(question);
+        } else {
+          const item = this.closest('.subcategory-item');
+          if (item) {
+            // This is a subcategory edit
+            const subcategoryId = item.getAttribute('data-id');
+            const subcategoryName = item.getAttribute('data-name');
+            openEditSubcategoryModal(subcategoryId, subcategoryName);
+          } else {
+            // This is a category edit
+            const categoryId = id;
+            const categoryName = this.closest('tr').cells[1].textContent;
+            openEditCategoryModal(categoryId, categoryName);
+          }
+        }
+      });
+    });
  </script>
 </body>
 </html>

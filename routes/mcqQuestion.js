@@ -96,12 +96,19 @@ router.delete('/:id', async (req, res) => {
     });
     
     if (!question) {
-      return res.status(404).json({ message: 'Question not found' });
+      return res.status(404).json({ 
+        status: false,
+        message: 'Question not found' 
+      });
     }
     
-    res.json({ message: 'Question deleted successfully' });
+    res.json({ 
+      status: true,
+      message: 'Question deleted successfully' 
+    });
   } catch (error) {
     res.status(500).json({ 
+      status: false,
       message: 'Error deleting question',
       error: error.message 
     });

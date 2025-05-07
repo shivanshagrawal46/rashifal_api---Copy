@@ -41,6 +41,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Root path redirect
+app.get('/', (req, res) => {
+  res.redirect('/login');
+});
+
 // credentials from .env
 const USERNAME = process.env.ADMIN_USERNAME;
 const HASHED_PASSWORD = process.env.ADMIN_HASH;
